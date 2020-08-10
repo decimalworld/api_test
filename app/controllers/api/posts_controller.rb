@@ -6,6 +6,7 @@ class Api::PostsController < ApplicationController
   end
     
   def show
+    Resque.enqueue(Sleeper, 5)
     @post = Post.find(params[:id])
     render json: @post
   end

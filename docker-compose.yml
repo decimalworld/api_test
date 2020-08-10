@@ -8,7 +8,16 @@ services:
     environment:
       POSTGRES_PASSWORD: password
   
+  redis:
+    image: 'redis:5-alpine'
+    command: redis-server
+    ports:
+      - 6379:6379
+
   web:
+    depends_on: 
+      - 'db'
+      - 'redis'
     build: .
     image: api_test
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
@@ -16,3 +25,8 @@ services:
       - ./:/api_test
     ports:
       - 3000:3000
+
+
+volumes:
+  redis:
+  postgres:
